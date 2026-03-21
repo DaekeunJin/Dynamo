@@ -137,7 +137,8 @@
 #define MIN_LOG_UPDATE_PERIOD           500
 #define MAX_LOG_UPDATE_PERIOD           10000
 
-
+#define MIN_LOG_UPDATE_PERIOD2          5000
+#define MAX_LOG_UPDATE_PERIOD2          3600000
 
 
 enum {

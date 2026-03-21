@@ -3895,6 +3895,9 @@ void CSerialComDlg::OnBnClickedSaveconfiguration() {
         strValue.Format("%d", m_iLOG_Update_Period);
         SetRegRoot_RegistryData("Common", "LogCountrol_UpdatePeriod", strValue);
 
+		strValue.Format("%d", m_iLOG_Update_Period_input_mode);
+		SetRegRoot_RegistryData("Common", "LogCountrol_UpdatePeriod_input", strValue);
+
         // Graph height 
         for (int iGraph = 0; iGraph < MAX_GRAPH_COUNT; iGraph++) {
             if (m_strPacketHeader == " " || m_strPacketHeader == "")
@@ -4756,6 +4759,10 @@ void CSerialComDlg::LoadCommonConfiguration() {
     strValue = GetRegRoot_RegistryData("Common", "LogCountrol_UpdatePeriod");
     if (strValue == "") { strValue = "5"; }
     m_iLOG_Update_Period = max(MIN_LOG_UPDATE_PERIOD, min(MAX_LOG_UPDATE_PERIOD, atoi(strValue)));
+
+	strValue = GetRegRoot_RegistryData("Common", "LogCountrol_UpdatePeriod_input");
+	if (strValue == "") { strValue = "60000"; }
+	m_iLOG_Update_Period_input_mode = max(MIN_LOG_UPDATE_PERIOD2, min(MAX_LOG_UPDATE_PERIOD2, atoi(strValue)));
 
 	UDF;
 }
@@ -15121,15 +15128,18 @@ BOOL CSerialComDlg::OnHelpInfo(HELPINFO* pHelpInfo)
 	return TRUE; // 부모 클래스의 OnHelpInfo를 호출하지 않고 TRUE를 반환하여 처리를 완료합니다.
 }
      
-void CSerialComDlg::CheckLogUpdate(bool bForced) {    
-	if (m_bShowDataControl == false || m_bProhibtLogUpdate) return;
-    static DWORD preTick = GetTickCount();
-    if ((m_bReqLogSizeUpdate && GetTickCount() - preTick > (DWORD)m_iLOG_Update_Period) || bForced) {
-        m_bReqLogSizeUpdate = FALSE;
-        preTick = GetTickCount();
-        m_ctrlLogList.SetItemCountEx(static_cast<int>(m_arrLogData.size()), LVSICF_NOINVALIDATEALL);
-        ScrollToLastItem();
-    }
+void CSerialComDlg::CheckLogUpdate(bool bForced) {
+	static DWORD preTick = GetTickCount();
+	if (bForced == false && (m_bProhibtLogUpdate || m_bShowDataControl == false)) {
+		if (GetTickCount() - preTick < (DWORD)m_iLOG_Update_Period_input_mode) { return; }
+	}
+
+	if (bForced || (m_bReqLogSizeUpdate && GetTickCount() - preTick > (DWORD)m_iLOG_Update_Period)) {
+		m_bReqLogSizeUpdate = FALSE;
+		preTick = GetTickCount();
+		m_ctrlLogList.SetItemCountEx(static_cast<int>(m_arrLogData.size()), LVSICF_NOINVALIDATEALL);
+		ScrollToLastItem();
+	}
 }
 
 

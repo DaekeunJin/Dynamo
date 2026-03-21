@@ -225,7 +225,8 @@ BEGIN_MESSAGE_MAP(CSettingDlg, CDialogEx)
 		ON_EN_CHANGE(IDC_AutoSaveTimeout, &CSettingDlg::OnEnChangeAutosavetimeout)
 		ON_EN_CHANGE(IDC_AutoSaveLogCount, &CSettingDlg::OnEnChangeAutosavelogcount)
         ON_EN_CHANGE(IDC_LogUpdateCount, &CSettingDlg::OnEnChangeLogupdatecount)
-        END_MESSAGE_MAP()
+		ON_EN_CHANGE(IDC_LogUpdateCount2, &CSettingDlg::OnEnChangeLogupdatecount2)
+		END_MESSAGE_MAP()
 
 // CSettingDlg 메시지 처리기
 
@@ -420,6 +421,7 @@ void CSettingDlg::OnBnClickedSaveclose() {
 	}
 
     pMain->m_iLOG_Update_Period = GetDlgItemInt(IDC_LogUpdateCount);
+	pMain->m_iLOG_Update_Period_input_mode = GetDlgItemInt(IDC_LogUpdateCount2);
 	OnOK();
 }
 
@@ -585,6 +587,7 @@ BOOL CSettingDlg::OnInitDialog()
 		CheckDlgButton(IDC_UseAutoSaveCond1, false);
 	}
     SetDlgItemInt(IDC_LogUpdateCount, pMain->m_iLOG_Update_Period);
+	SetDlgItemInt(IDC_LogUpdateCount2, pMain->m_iLOG_Update_Period_input_mode);
 
 	GetDlgItem(IDC_STATIC)->SetFocus();
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -1866,4 +1869,17 @@ void CSettingDlg::OnEnChangeLogupdatecount(){
     if (s1 != s2) {
         SetDlgItemText(IDC_LogUpdateCount, s2);
     }
+}
+
+
+void CSettingDlg::OnEnChangeLogupdatecount2()
+{
+	CString s1, s2;
+	int val = GetDlgItemInt(IDC_LogUpdateCount2);
+	GetDlgItemText(IDC_LogUpdateCount2, s1);
+	s2.Format("%d", max(MIN_LOG_UPDATE_PERIOD2, min(MAX_LOG_UPDATE_PERIOD2, val)));
+
+	if (s1 != s2) {
+		SetDlgItemText(IDC_LogUpdateCount2, s2);
+	}
 }

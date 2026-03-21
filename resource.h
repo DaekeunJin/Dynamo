@@ -1140,6 +1140,7 @@
 #define IDC_ChangeSize                  2108
 #define IDC_LogUpdateCount              2109
 #define IDC_Dummy                       2110
+#define IDC_LogUpdateCount2             2110
 #define IDC_UseLoadCtrl                 2111
 #define IDC_LoadCtrl_Torque             2112
 #define IDC_LoadCtrl_TargetTorque       2112

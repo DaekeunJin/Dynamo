@@ -805,6 +805,7 @@ public:
     BOOL m_bReqLogSizeUpdate{ FALSE };
     void CheckLogUpdate(bool bForced = false);
     int m_iLOG_Update_Period{ 500 };
+	int m_iLOG_Update_Period_input_mode{ 60000 };
 	afx_msg void OnBnClickedDisplay4();
 	afx_msg void OnPortOpen3();
 	afx_msg void OnPortClose3();
