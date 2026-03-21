@@ -593,6 +593,14 @@ BEGIN_MESSAGE_MAP(CSerialComDlg, CDialog)
 		ON_BN_CLICKED(IDC_INC_Gain2, &CSerialComDlg::OnBnClickedIncGain2)
 		ON_BN_CLICKED(IDC_DEC_Gain2, &CSerialComDlg::OnBnClickedDecGain2)
 		ON_BN_CLICKED(IDC_SaveLoadSetting, &CSerialComDlg::OnBnClickedSaveloadsetting)
+		ON_BN_CLICKED(IDC_INC_Gain5, &CSerialComDlg::OnBnClickedIncGain5)
+		ON_BN_CLICKED(IDC_INC_Gain3, &CSerialComDlg::OnBnClickedIncGain3)
+		ON_BN_CLICKED(IDC_DEC_Gain5, &CSerialComDlg::OnBnClickedDecGain5)
+		ON_BN_CLICKED(IDC_DEC_Gain3, &CSerialComDlg::OnBnClickedDecGain3)
+		ON_BN_CLICKED(IDC_INC_Gain6, &CSerialComDlg::OnBnClickedIncGain6)
+		ON_BN_CLICKED(IDC_INC_Gain4, &CSerialComDlg::OnBnClickedIncGain4)
+		ON_BN_CLICKED(IDC_DEC_Gain6, &CSerialComDlg::OnBnClickedDecGain6)
+		ON_BN_CLICKED(IDC_DEC_Gain4, &CSerialComDlg::OnBnClickedDecGain4)
 		END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -4018,6 +4026,7 @@ void CSerialComDlg::LoadHeaderConfiguration() {
 	if (m_bAvailablePositionGraph && m_strPacketHeader == m_strPositonGraphHeader)	m_bDisplayPosition = TRUE; else m_bDisplayPosition = FALSE;
 	if (bPreDisplayPosition != m_bDisplayPosition) SetFrameSize();
 	
+	GetReg_LoadSetting();
 	DrawInit();
 }
 
@@ -13290,6 +13299,7 @@ void CSerialComDlg::OnBnClickedDisplay3()
 		GetDlgItem(IDC_Model)->ShowWindow(FALSE);
 		m_iDrawGraphRangeX[0] = 70;        
 	}
+	GetDlgItem(IDC_Display2)->ShowWindow(m_bShowDataControl);
 	OnSize(0, m_iWndSizeX, m_iWndSizeY);
 	ControlView();
 	bBusy = FALSE;
@@ -15178,6 +15188,33 @@ void CSerialComDlg::OnBnClickedAutoconnect()
 		// PS Init
 		Init_PS_Setting();
 	}
+
+	{
+
+		CString str = "";
+		int nFail = 0;
+		if (iConnectMode[0] == -1) {
+			str += " MCU";			
+			nFail++;
+		}
+		if (iConnectMode[1] == -1) {
+			if (nFail > 0) { str += ","; }
+			str += " Braker";
+			nFail++;
+		}
+
+		if (iConnectMode[2] == -1) {
+			if (nFail > 0) { str += ","; }
+			str += " Torquemeter";
+			nFail++;
+		}
+
+		if (nFail > 0) { 
+			CString str2;
+			str2.Format("Fail to Port Open (%d): ", nFail);
+			AfxMessageBox(str2 + str); 
+		}
+	}
 }
 
 
@@ -15811,7 +15848,7 @@ void CSerialComDlg::OnEnChangePsRate2()
 {
 	CString str1, str2;
 	GetDlgItemText(IDC_PS_Rate2, str1);
-	double cur_gain = atof(str1);
+	double cur_gain = min(10.f, max(0.f, atof(str1)));
 	str2.Format("%.5f", cur_gain + 0.000001f);
 	if (str1 != str2) {
 		SetDlgItemText(IDC_PS_Rate2, str2);
@@ -15842,20 +15879,14 @@ void CSerialComDlg::OnBnClickedDecGain2()
 
 
 void CSerialComDlg::GetReg_LoadSetting() {
+	static bool init = true;
+
 	CString strAddr = "LoadSetting";
 	CString strItem, strValue;
 
 	strValue = GetRegRoot_RegistryData(strAddr, "MinControlSpeed");
 	if (strValue == "") { strValue = "10"; }
 	m_LoadSetting.iMinSpeed_control = atoi(strValue);
-	
-	strValue = GetRegRoot_RegistryData(strAddr, "I-Gain");
-	if (strValue == "") { strValue = "0.3"; }
-	m_LoadSetting.i_gain = atof(strValue);
-
-	strValue = GetRegRoot_RegistryData(strAddr, "P-Gain");
-	if (strValue == "") { strValue = "50"; }
-	m_LoadSetting.p_gain = atoi(strValue);
 	
 	strValue = GetRegRoot_RegistryData(strAddr, "OCP_Level");
 	if (strValue == "") { strValue = "9.999"; }
@@ -15887,13 +15918,25 @@ void CSerialComDlg::GetReg_LoadSetting() {
 	if (strValue == "") { strValue = "1"; }
 	m_LoadSetting.useMinSpeed = atoi(strValue);
 
-	static bool init = true;
+
+
 	if (init) {
 		init = false;
 		SetDlgItemInt(IDC_PS_Rate, m_LoadSetting.p_gain);
 
 		strValue.Format("%.5f", m_LoadSetting.i_gain + 0.0000001f);
 		SetDlgItemText(IDC_PS_Rate2, strValue);
+
+		strValue = GetRegRoot_RegistryData(strAddr, "Target_Torque");
+		SetDlgItemText(IDC_LoadCtrl_TargetTorque, strValue);
+
+		strValue = GetRegRoot_RegistryData(strAddr, "I-Gain");
+		if (strValue == "") { strValue = "0.3"; }
+		m_LoadSetting.i_gain = atof(strValue);
+
+		strValue = GetRegRoot_RegistryData(strAddr, "P-Gain");
+		if (strValue == "") { strValue = "50"; }
+		m_LoadSetting.p_gain = atoi(strValue);
 	}
 }
 
@@ -15907,12 +15950,9 @@ void CSerialComDlg::SetReg_LoadSetting() {
 	
 	GetDlgItemText(IDC_PS_Rate2, strValue);
 	SetRegRoot_RegistryData(strAddr, "I-Gain", strValue);
-
 	
 	GetDlgItemText(IDC_PS_Rate, strValue);
 	SetRegRoot_RegistryData(strAddr, "P-Gain", strValue);
-
-
 
 	strValue.Format("%f", m_LoadSetting.overCurrentLevel);
 	SetRegRoot_RegistryData(strAddr, "OCP_Level", strValue);
@@ -15931,6 +15971,9 @@ void CSerialComDlg::SetReg_LoadSetting() {
 
 	strValue.Format("%d", m_LoadSetting.useMinSpeed);
 	SetRegRoot_RegistryData(strAddr, "UseMinSpeed", strValue);
+
+	GetDlgItemText(IDC_LoadCtrl_TargetTorque, strValue);
+	SetRegRoot_RegistryData(strAddr, "Target_Torque", strValue);
 }
 
 void CSerialComDlg::OnBnClickedSaveloadsetting()
@@ -15950,3 +15993,71 @@ void CSerialComDlg::LoadDynamoPinName()
 	m_strPinName[5].Format("Load Current    [A]");
 }
 
+
+
+void CSerialComDlg::OnBnClickedIncGain5()
+{
+	int iGain = GetDlgItemInt(IDC_PS_Rate);
+	SetDlgItemInt(IDC_PS_Rate, iGain * 11 / 10);
+}
+
+
+void CSerialComDlg::OnBnClickedIncGain3()
+{
+	int iGain = GetDlgItemInt(IDC_PS_Rate);
+	SetDlgItemInt(IDC_PS_Rate, iGain * 3 / 2);
+}
+
+
+void CSerialComDlg::OnBnClickedDecGain5()
+{
+	int iGain = GetDlgItemInt(IDC_PS_Rate);
+	SetDlgItemInt(IDC_PS_Rate, iGain * 10 / 11);
+}
+
+
+void CSerialComDlg::OnBnClickedDecGain3()
+{
+	int iGain = GetDlgItemInt(IDC_PS_Rate);
+	SetDlgItemInt(IDC_PS_Rate, iGain * 2 / 3);
+}
+
+
+void CSerialComDlg::OnBnClickedIncGain6()
+{
+	CString str1, str2;
+	GetDlgItemText(IDC_PS_Rate2, str1);
+	double cur_gain = atof(str1);
+	str2.Format("%.5f", cur_gain * 1.1f + 0.000001f);
+	SetDlgItemText(IDC_PS_Rate2, str2);
+}
+
+
+void CSerialComDlg::OnBnClickedIncGain4()
+{
+	CString str1, str2;
+	GetDlgItemText(IDC_PS_Rate2, str1);
+	double cur_gain = atof(str1);
+	str2.Format("%.5f", cur_gain * 1.5f + 0.000001f);
+	SetDlgItemText(IDC_PS_Rate2, str2);
+}
+
+
+void CSerialComDlg::OnBnClickedDecGain6()
+{
+	CString str1, str2;
+	GetDlgItemText(IDC_PS_Rate2, str1);
+	double cur_gain = atof(str1);
+	str2.Format("%.5f", cur_gain /  1.1f + 0.000001f);
+	SetDlgItemText(IDC_PS_Rate2, str2);
+}
+
+
+void CSerialComDlg::OnBnClickedDecGain4()
+{
+	CString str1, str2;
+	GetDlgItemText(IDC_PS_Rate2, str1);
+	double cur_gain = atof(str1);
+	str2.Format("%.5f", cur_gain / 1.5f + 0.000001f);
+	SetDlgItemText(IDC_PS_Rate2, str2);
+}

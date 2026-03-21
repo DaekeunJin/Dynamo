@@ -887,6 +887,14 @@ public:
 	void LoadDynamoPinName();
 	double m_fTargetTorque;
 	CString m_strTargetTorque;
+	afx_msg void OnBnClickedIncGain5();
+	afx_msg void OnBnClickedIncGain3();
+	afx_msg void OnBnClickedDecGain5();
+	afx_msg void OnBnClickedDecGain3();
+	afx_msg void OnBnClickedIncGain6();
+	afx_msg void OnBnClickedIncGain4();
+	afx_msg void OnBnClickedDecGain6();
+	afx_msg void OnBnClickedDecGain4();
 };
 
 

@@ -27,4 +27,6 @@ public:
 	afx_msg void OnBnClickedSavesetting();
 	virtual BOOL OnInitDialog();
 	afx_msg void OnBnClickedUseprotectionOvervoltge();
+	afx_msg void OnBnClickedUseminspeed();
+	afx_msg void OnBnClickedUseprotectionOvercurrent();
 };

@@ -30,6 +30,8 @@ void CLoadCtrlDlg::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CLoadCtrlDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_SaveSetting, &CLoadCtrlDlg::OnBnClickedSavesetting)
 	ON_BN_CLICKED(IDC_UseProtection_OverVoltge, &CLoadCtrlDlg::OnBnClickedUseprotectionOvervoltge)
+	ON_BN_CLICKED(IDC_UseMinSpeed, &CLoadCtrlDlg::OnBnClickedUseminspeed)
+	ON_BN_CLICKED(IDC_UseProtection_OverCurrent, &CLoadCtrlDlg::OnBnClickedUseprotectionOvercurrent)
 END_MESSAGE_MAP()
 
 
@@ -88,12 +90,27 @@ BOOL CLoadCtrlDlg::OnInitDialog()
 	str.Format("%.3f", pMain->m_LoadSetting.overCurrentLevel + 0.0001f);
 	SetDlgItemText(IDC_OCP, str);	
 
+	OnBnClickedUseminspeed();
+	OnBnClickedUseprotectionOvervoltge();
+	OnBnClickedUseprotectionOvercurrent();
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // 예외: OCX 속성 페이지는 FALSE를 반환해야 합니다.
 }
 
+void CLoadCtrlDlg::OnBnClickedUseminspeed()
+{
+	GetDlgItem(IDC_MinCtrlRpm)->EnableWindow(IsDlgButtonChecked(IDC_UseMinSpeed));
+}
 
 void CLoadCtrlDlg::OnBnClickedUseprotectionOvervoltge()
 {
-	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	GetDlgItem(IDC_OVP)->EnableWindow(IsDlgButtonChecked(IDC_UseProtection_OverVoltge));
 }
+
+void CLoadCtrlDlg::OnBnClickedUseprotectionOvercurrent()
+{
+	GetDlgItem(IDC_OCP)->EnableWindow(IsDlgButtonChecked(IDC_UseProtection_OverCurrent));
+}
+
+
+

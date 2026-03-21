@@ -1181,6 +1181,14 @@
 #define IDC_TorqueDn4                   2143
 #define IDC_VoltDn5                     2144
 #define IDC_DEC_Gain2                   2145
+#define IDC_INC_Gain3                   2146
+#define IDC_DEC_Gain3                   2147
+#define IDC_INC_Gain4                   2148
+#define IDC_DEC_Gain4                   2149
+#define IDC_INC_Gain5                   2150
+#define IDC_DEC_Gain5                   2151
+#define IDC_INC_Gain6                   2152
+#define IDC_DEC_Gain6                   2153
 
 // Next default values for new objects
 // 
