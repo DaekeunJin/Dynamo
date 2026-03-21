@@ -84,7 +84,7 @@
 
 #define MIN_RANGE_LOGFILTER_H			421
 #define MAX_RANGE_LOGFILTER_H			1920
-#define MIN_RANGE_GRAPH_H				492
+#define MIN_RANGE_GRAPH_H				502
 
 #define DRAW_CONTROL_START_Y			(GRAPH_RANGE_Y + 5)		// 50  -> 150
 #define DRAW_CONTROL_DY					18

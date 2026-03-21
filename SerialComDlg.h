@@ -895,6 +895,8 @@ public:
 	afx_msg void OnBnClickedIncGain4();
 	afx_msg void OnBnClickedDecGain6();
 	afx_msg void OnBnClickedDecGain4();
+	afx_msg void OnBnClickedProhibitlogupdate();
+	bool m_bProhibtLogUpdate{ true };
 };
 
 

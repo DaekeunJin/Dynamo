@@ -870,6 +870,8 @@
 #define IDC_TargetHeader                1882
 #define IDC_Display4                    1882
 #define IDC_ReqCopy                     1883
+#define IDC_Display5                    1883
+#define IDC_ProhibitLogUpdate           1883
 #define IDC_SourceHeader                1884
 #define IDC_TargetMode2                 1885
 #define IDC_CopyItem0                   1886

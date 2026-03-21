@@ -75,7 +75,7 @@ CSerialComDlg::CSerialComDlg(CWnd* pParent /*=NULL*/)
 	, m_iFilterIndex(0)
 	, m_bReqRedrawGraph(TRUE)
 	, m_iLegendX(165)
-	, m_iLegendX_PositionGraph(165)
+ 	, m_iLegendX_PositionGraph(250)
 	, m_bAdjustLegendX(FALSE)
 	, m_bIsAdjustMode(FALSE)
 	, m_bSelectListBox(FALSE)
@@ -601,6 +601,7 @@ BEGIN_MESSAGE_MAP(CSerialComDlg, CDialog)
 		ON_BN_CLICKED(IDC_INC_Gain4, &CSerialComDlg::OnBnClickedIncGain4)
 		ON_BN_CLICKED(IDC_DEC_Gain6, &CSerialComDlg::OnBnClickedDecGain6)
 		ON_BN_CLICKED(IDC_DEC_Gain4, &CSerialComDlg::OnBnClickedDecGain4)
+		ON_BN_CLICKED(IDC_ProhibitLogUpdate, &CSerialComDlg::OnBnClickedProhibitlogupdate)
 		END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -687,6 +688,7 @@ BOOL CSerialComDlg::OnInitDialog() {
 
 	m_ctrlProgReading.SetBkColor(RGB(0xff, 0xff, 0xff));
 	m_ctrlProgReading.SetBarColor(RGB(0x00, 0x10, 0x00));
+	CheckDlgButton(IDC_ProhibitLogUpdate, true);
 
 	DragAcceptFiles(TRUE);
 	ShowWindow(SW_SHOWMAXIMIZED);
@@ -4854,7 +4856,7 @@ void CSerialComDlg::OnBnClickedUsercommandsetting() {
 
 		OnBnClickedSaveconfiguration();
 		CheckMathProbeSetting();
-        CRect rect(1, m_iPos_DataStart, m_iDrawGraphRangeX[0], m_iWndSizeY + 1);
+        CRect rect(1, m_iPos_DataStart - 1, m_iDrawGraphRangeX[0], m_iWndSizeY + 1);
         InvalidateRect(&rect);
 		DrawInit();
 	}
@@ -5188,7 +5190,7 @@ void CSerialComDlg::OnLButtonDblClk(UINT nFlags, CPoint point) {
 			m_iPreDrawGraphRangeX = m_iDrawGraphRangeX[0];
 
 			OnSize(0, m_iWndSizeX, m_iWndSizeY);
-            CRect rect(1, m_iPos_DataStart, m_iDrawGraphRangeX[0], m_iWndSizeY + 1);
+            CRect rect(1, m_iPos_DataStart - 1, m_iDrawGraphRangeX[0], m_iWndSizeY + 1);
             InvalidateRect(&rect);
 			DrawInit();
 			m_AdjustLogFilter_H.isPressed = FALSE;
@@ -5811,7 +5813,7 @@ void CSerialComDlg::GetSaveLog(BYTE *pBuffer, UINT buf_size) {
 					if (++iPinIndex >= m_iMaxMathSize) {
 						if (m_bGetSettingInLoading && buf_size - cur_idx < MAXIMUM_DATA_SIZE) {
 							UDF;
-							CRect rect(1, m_iPos_DataStart, m_iDrawGraphRangeX[0], m_iWndSizeY + 1);
+							CRect rect(1, m_iPos_DataStart - 1, m_iDrawGraphRangeX[0], m_iWndSizeY + 1);
 							InvalidateRect(&rect);
 							DrawInit();
 							OptimizeGraphCount();
@@ -5847,7 +5849,7 @@ void CSerialComDlg::GetSaveLog(BYTE *pBuffer, UINT buf_size) {
 						if (++iPinIndex >= m_iMaxDataSize) {
 							if (m_bGetSettingInLoading) {
 								UDF;
-								CRect rect(1, m_iPos_DataStart, m_iDrawGraphRangeX[0], m_iWndSizeY + 1);
+								CRect rect(1, m_iPos_DataStart - 1, m_iDrawGraphRangeX[0], m_iWndSizeY + 1);
 								InvalidateRect(&rect);
 								DrawInit();
 								OptimizeGraphCount();
@@ -6155,7 +6157,7 @@ void CSerialComDlg::GetSaveLog(BYTE *pBuffer, UINT buf_size) {
 					if (++iPinIndex >= m_iMaxMathSize) {
 						if (m_bGetSettingInLoading && buf_size - cur_idx < (UINT)m_iMaxDataSize) {
 							UDF;
-							CRect rect(1, m_iPos_DataStart, m_iDrawGraphRangeX[0], m_iWndSizeY + 1);
+							CRect rect(1, m_iPos_DataStart - 1, m_iDrawGraphRangeX[0], m_iWndSizeY + 1);
 							InvalidateRect(&rect);
 							DrawInit();
 							OptimizeGraphCount();
@@ -6191,7 +6193,7 @@ void CSerialComDlg::GetSaveLog(BYTE *pBuffer, UINT buf_size) {
 						if (++iPinIndex >= m_iMaxDataSize) {
 							if (m_bGetSettingInLoading) {
 								UDF;
-								CRect rect(1, m_iPos_DataStart, m_iDrawGraphRangeX[0], m_iWndSizeY + 1);
+								CRect rect(1, m_iPos_DataStart - 1, m_iDrawGraphRangeX[0], m_iWndSizeY + 1);
 								InvalidateRect(&rect);
 								CheckMathProbeValid();
 								DrawInit();
@@ -7741,7 +7743,7 @@ void CSerialComDlg::OnLButtonUp(UINT nFlags, CPoint point) {
 
 		if (bIsAdjustY) {
             ShowGraphControlbyHeight();
-            CRect rect(1, m_iPos_DataStart, m_iDrawGraphRangeX[0], m_iWndSizeY + 1);
+            CRect rect(1, m_iPos_DataStart - 1, m_iDrawGraphRangeX[0], m_iWndSizeY + 1);
             InvalidateRect(&rect);
 		}
 		DrawInit();
@@ -7841,7 +7843,7 @@ void CSerialComDlg::OnLButtonUp(UINT nFlags, CPoint point) {
 	if (m_AdjustLogFilter_H.isPressed) {
 		m_AdjustLogFilter_H.isPressed = FALSE;
 		OnSize(0, m_iWndSizeX, m_iWndSizeY);
-        CRect rect(1, m_iPos_DataStart, m_iDrawGraphRangeX[0], m_iWndSizeY + 1);
+        CRect rect(1, m_iPos_DataStart - 1, m_iDrawGraphRangeX[0], m_iWndSizeY + 1);
         InvalidateRect(&rect);
 		DrawInit();
 		m_bReqGraphUpdate = TRUE;
@@ -8464,12 +8466,12 @@ void CSerialComDlg::OnSize(UINT nType, int cx, int cy) {
     }  
 
     ShowGraphControlbyHeight();		
-    CRect rect(1, m_iPos_DataStart, m_iDrawGraphRangeX[0], m_iWndSizeY + 1);
+    CRect rect(1, m_iPos_DataStart - 1, m_iDrawGraphRangeX[0], m_iWndSizeY + 1);
     InvalidateRect(&rect);
 	DrawInit();
 	UDF;
 	m_bReqGraphUpdate = TRUE;
-	GetDlgItem(IDC_Range)->MoveWindow(m_iDrawGraphRangeX[0] - 21, m_iDrawGraphRangeY[0][0] - 20, 19, 19, TRUE);	
+	GetDlgItem(IDC_Display3)->MoveWindow(m_iDrawGraphRangeX[0] - 72, m_iDrawGraphRangeY[0][0] - 20, 70, 19, TRUE);
 
 	if (iWndSizeX != cx || iWndSizeY != cy) {
 		ControlView();
@@ -8734,7 +8736,7 @@ void CSerialComDlg::OnBnClickedDefinemathprobe()
 		CheckMathProbeSetting();		
         LoadHeaderConfiguration();
 		OptimizeGraphCount();
-        CRect rect(1, m_iPos_DataStart, m_iDrawGraphRangeX[0], m_iWndSizeY + 1);
+        CRect rect(1, m_iPos_DataStart - 1, m_iDrawGraphRangeX[0], m_iWndSizeY + 1);
         InvalidateRect(&rect);
 		DrawInit();
 		m_bReqGraphUpdate = TRUE;
@@ -10101,8 +10103,8 @@ void CSerialComDlg::ControlView() {
         GetDlgItem(IDC_DataSetting2)->ShowWindow(FALSE);
     }
 
-	GetDlgItem(IDC_DefineMathProbe)->MoveWindow(115, m_iPos_MathStart + 2, 55, 23, TRUE);
-	GetDlgItem(IDC_MathPage0)->MoveWindow(10, m_iPos_MathStart + 9, 100, 20, TRUE);
+	GetDlgItem(IDC_DefineMathProbe)->MoveWindow(5, m_iPos_MathStart + 4, 55, 23, TRUE);
+	GetDlgItem(IDC_MathPage0)->MoveWindow(67, m_iPos_MathStart + 9, 100, 20, TRUE);
 	GetDlgItem(IDC_DataSetting2)->MoveWindow(270, m_iPos_MathStart + 7, 150, 20, TRUE);
 
 	int iMoveControl_H = m_iRangeLogFilterWidth - MIN_RANGE_LOGFILTER_H;	
@@ -11693,7 +11695,7 @@ void CSerialComDlg::SetLogFilterSize_H(CPoint point) {
         GetDlgItem(IDC_LogList)->MoveWindow(2, m_iRangeLogFilterVertical, m_iRangeLogFilterWidth, m_iWndSizeY - m_iRangeLogFilterVertical + 1, TRUE);
     }
 	OnSize(0, m_iWndSizeX, m_iWndSizeY);
-	CRect rect(1, m_iPos_DataStart, m_iDrawGraphRangeX[0], m_iWndSizeY + 1);
+	CRect rect(1, m_iPos_DataStart - 1, m_iDrawGraphRangeX[0], m_iWndSizeY + 1);
 	InvalidateRect(&rect);
 	DrawInit();
 
@@ -13282,7 +13284,6 @@ void CSerialComDlg::OnBnClickedDisplay3()
 		GetDlgItem(IDC_LogList)->ShowWindow(TRUE);
 		m_ctrlLogList.SetRedraw(TRUE);
 		GetDlgItem(IDC_DataSetting)->ShowWindow(TRUE);
-		GetDlgItem(IDC_STATIC_A0)->ShowWindow(TRUE);
 		GetDlgItem(IDC_Model)->ShowWindow(FALSE);
 		m_iDrawGraphRangeX[0] = m_iPreDrawGraphRangeX;
 	}
@@ -13295,10 +13296,10 @@ void CSerialComDlg::OnBnClickedDisplay3()
 		GetDlgItem(IDC_LogList)->ShowWindow(FALSE);
 		m_ctrlLogList.SetRedraw(FALSE);
 		GetDlgItem(IDC_DataSetting)->ShowWindow(FALSE);
-		GetDlgItem(IDC_STATIC_A0)->ShowWindow(FALSE);
 		GetDlgItem(IDC_Model)->ShowWindow(FALSE);
-		m_iDrawGraphRangeX[0] = 70;        
+		m_iDrawGraphRangeX[0] = 80;        
 	}
+	GetDlgItem(IDC_ProhibitLogUpdate)->ShowWindow(m_bShowDataControl);
 	GetDlgItem(IDC_Display2)->ShowWindow(m_bShowDataControl);
 	OnSize(0, m_iWndSizeX, m_iWndSizeY);
 	ControlView();
@@ -15121,6 +15122,7 @@ BOOL CSerialComDlg::OnHelpInfo(HELPINFO* pHelpInfo)
 }
      
 void CSerialComDlg::CheckLogUpdate(bool bForced) {    
+	if (m_bShowDataControl == false || m_bProhibtLogUpdate) return;
     static DWORD preTick = GetTickCount();
     if ((m_bReqLogSizeUpdate && GetTickCount() - preTick > (DWORD)m_iLOG_Update_Period) || bForced) {
         m_bReqLogSizeUpdate = FALSE;
@@ -15180,6 +15182,7 @@ void CSerialComDlg::OnBnClickedAutoconnect()
                     bAvailable[i] = false;
                     break;
                 }
+				Sleep(10);
             }
         }
     }
@@ -16060,4 +16063,10 @@ void CSerialComDlg::OnBnClickedDecGain4()
 	double cur_gain = atof(str1);
 	str2.Format("%.5f", cur_gain / 1.5f + 0.000001f);
 	SetDlgItemText(IDC_PS_Rate2, str2);
+}
+
+
+void CSerialComDlg::OnBnClickedProhibitlogupdate()
+{
+	m_bProhibtLogUpdate = IsDlgButtonChecked(IDC_ProhibitLogUpdate);
 }
