@@ -14765,6 +14765,10 @@ void CSerialComDlg::OnListCtrlClick(NMHDR* pNMHDR, LRESULT* pResult)
         }
         UDF;
         OnEnChangeIndexnumber();
+
+		int iIndex = min(max(0, nIndex), (int)(m_arrLogData.size()) - 1);
+		m_strTemp = m_arrLogData[iIndex];
+		SetDlgItemText(IDC_Temp, m_strTemp);
     }
 
     *pResult = 0;
