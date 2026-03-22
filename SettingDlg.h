@@ -176,5 +176,4 @@ public:
 	void UpdateAutosaveTimeout();
 	void UpdateAutosaveLogCount();
     afx_msg void OnEnChangeLogupdatecount();
-	afx_msg void OnEnChangeLogupdatecount2();
 };

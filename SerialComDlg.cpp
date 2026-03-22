@@ -601,7 +601,9 @@ BEGIN_MESSAGE_MAP(CSerialComDlg, CDialog)
 		ON_BN_CLICKED(IDC_INC_Gain4, &CSerialComDlg::OnBnClickedIncGain4)
 		ON_BN_CLICKED(IDC_DEC_Gain6, &CSerialComDlg::OnBnClickedDecGain6)
 		ON_BN_CLICKED(IDC_DEC_Gain4, &CSerialComDlg::OnBnClickedDecGain4)
-		ON_BN_CLICKED(IDC_ProhibitLogUpdate, &CSerialComDlg::OnBnClickedProhibitlogupdate)
+		ON_BN_CLICKED(IDC_HIDE_SIDEMENU, &CSerialComDlg::OnBnClickedHideSidemenu)
+		ON_BN_CLICKED(IDC_ShowMathMenu, &CSerialComDlg::OnBnClickedShowmathmenu)
+		ON_BN_CLICKED(IDC_HideMathMenu, &CSerialComDlg::OnBnClickedHidemathmenu)
 		END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -685,10 +687,13 @@ BOOL CSerialComDlg::OnInitDialog() {
 	OnBnClickedClearmessage();
 
     GetDlgItem(IDC_FilterMessage)->ShowWindow(m_bShowFilterLogControl);
+	if (m_bShowDataControl) {
+		GetDlgItem(IDC_ShowMathMenu)->ShowWindow(m_bShowMathControl == FALSE);
+		GetDlgItem(IDC_HideMathMenu)->ShowWindow(m_bShowMathControl == TRUE);
+	}
 
 	m_ctrlProgReading.SetBkColor(RGB(0xff, 0xff, 0xff));
 	m_ctrlProgReading.SetBarColor(RGB(0x00, 0x10, 0x00));
-	CheckDlgButton(IDC_ProhibitLogUpdate, true);
 
 	DragAcceptFiles(TRUE);
 	ShowWindow(SW_SHOWMAXIMIZED);
@@ -909,8 +914,6 @@ void CSerialComDlg::OnPortOpen1() {
 		m_iProgramMode = DATA_ACQUISITION_MODE;
 		ProgramModeUpdate();
 	}
-
-	//UpdateAutoHederRx();
 }
 
 
@@ -946,7 +949,6 @@ void CSerialComDlg::OnPortOpen2(){
 		ProgramModeUpdate();
 	}
 }
-
 
 
 void CSerialComDlg::OnPortOpen3() {
@@ -3226,7 +3228,7 @@ void CSerialComDlg::OnBnClickedDefaultbutton() {
 
 void CSerialComDlg::ProgramModeUpdate(void) {
 	if (m_iProgramMode == DATA_ACQUISITION_MODE) {
-		((CButton*)GetDlgItem(IDC_DefaultButton))->SetWindowTextA("Data Analyzing");
+		((CButton*)GetDlgItem(IDC_DefaultButton))->SetWindowTextA("데이터 분석 모드");
 		SetDlgItemInt(IDC_IndexNumber, max(0, m_iHistoryIndex - 1));
 		GetDlgItem(IDC_IndexNumber)->EnableWindow(FALSE);
 		m_bUseStatistics = FALSE;
@@ -3238,7 +3240,7 @@ void CSerialComDlg::ProgramModeUpdate(void) {
 		m_bIsMoveMode = FALSE;
 	}
 	else {
-		((CButton*)GetDlgItem(IDC_DefaultButton))->SetWindowTextA("Data Capturing");
+		((CButton*)GetDlgItem(IDC_DefaultButton))->SetWindowTextA("그래프 표시 모드");
 		GetDlgItem(IDC_IndexNumber)->EnableWindow(TRUE);
 	}
 	m_bReqGraphUpdate = TRUE;
@@ -3894,9 +3896,6 @@ void CSerialComDlg::OnBnClickedSaveconfiguration() {
 
         strValue.Format("%d", m_iLOG_Update_Period);
         SetRegRoot_RegistryData("Common", "LogCountrol_UpdatePeriod", strValue);
-
-		strValue.Format("%d", m_iLOG_Update_Period_input_mode);
-		SetRegRoot_RegistryData("Common", "LogCountrol_UpdatePeriod_input", strValue);
 
         // Graph height 
         for (int iGraph = 0; iGraph < MAX_GRAPH_COUNT; iGraph++) {
@@ -4759,10 +4758,6 @@ void CSerialComDlg::LoadCommonConfiguration() {
     strValue = GetRegRoot_RegistryData("Common", "LogCountrol_UpdatePeriod");
     if (strValue == "") { strValue = "5"; }
     m_iLOG_Update_Period = max(MIN_LOG_UPDATE_PERIOD, min(MAX_LOG_UPDATE_PERIOD, atoi(strValue)));
-
-	strValue = GetRegRoot_RegistryData("Common", "LogCountrol_UpdatePeriod_input");
-	if (strValue == "") { strValue = "60000"; }
-	m_iLOG_Update_Period_input_mode = max(MIN_LOG_UPDATE_PERIOD2, min(MAX_LOG_UPDATE_PERIOD2, atoi(strValue)));
 
 	UDF;
 }
@@ -8478,7 +8473,7 @@ void CSerialComDlg::OnSize(UINT nType, int cx, int cy) {
 	DrawInit();
 	UDF;
 	m_bReqGraphUpdate = TRUE;
-	GetDlgItem(IDC_Display3)->MoveWindow(m_iDrawGraphRangeX[0] - 72, m_iDrawGraphRangeY[0][0] - 20, 70, 19, TRUE);
+	GetDlgItem(IDC_HIDE_SIDEMENU)->MoveWindow(m_iDrawGraphRangeX[0] - 72, m_iDrawGraphRangeY[0][0] - 23, 25, 19, TRUE);
 
 	if (iWndSizeX != cx || iWndSizeY != cy) {
 		ControlView();
@@ -8497,8 +8492,7 @@ void CSerialComDlg::OnPortClose1() {
 		m_bUpdateList = FALSE;
 		m_iProgramMode = DATA_ANALYZE_MODE;
 		ProgramModeUpdate();
-	}	
-	//UpdateAutoHederRx();
+	}
 }
 
 void CSerialComDlg::OnPortClose2() {
@@ -8510,7 +8504,6 @@ void CSerialComDlg::OnPortClose2() {
 		m_iProgramMode = DATA_ANALYZE_MODE;
 		ProgramModeUpdate();
 	}
-	//UpdateAutoHederRx();
 }
 
 void CSerialComDlg::OnPortClose3() {
@@ -8522,7 +8515,6 @@ void CSerialComDlg::OnPortClose3() {
 		m_iProgramMode = DATA_ANALYZE_MODE;
 		ProgramModeUpdate();
 	}
-	//UpdateAutoHederRx();
 }
 
 void CSerialComDlg::DisplayControl() {
@@ -10110,8 +10102,9 @@ void CSerialComDlg::ControlView() {
         GetDlgItem(IDC_DataSetting2)->ShowWindow(FALSE);
     }
 
-	GetDlgItem(IDC_DefineMathProbe)->MoveWindow(5, m_iPos_MathStart + 4, 55, 23, TRUE);
-	GetDlgItem(IDC_MathPage0)->MoveWindow(67, m_iPos_MathStart + 9, 100, 20, TRUE);
+	GetDlgItem(IDC_HideMathMenu)->MoveWindow(5, m_iPos_MathStart + 4, 100, 23, TRUE);
+	GetDlgItem(IDC_DefineMathProbe)->MoveWindow(108, m_iPos_MathStart + 4, 55, 23, TRUE);	
+	GetDlgItem(IDC_MathPage0)->MoveWindow(169, m_iPos_MathStart + 9, 100, 20, TRUE);
 	GetDlgItem(IDC_DataSetting2)->MoveWindow(270, m_iPos_MathStart + 7, 150, 20, TRUE);
 
 	int iMoveControl_H = m_iRangeLogFilterWidth - MIN_RANGE_LOGFILTER_H;	
@@ -13266,10 +13259,14 @@ void CSerialComDlg::OnBnClickedDisplay2()
 	if (IsDlgButtonChecked(IDC_Display2)) {
 		m_bShowMathControl = TRUE;
 		m_iShowMathControl = MAX_MATHCONTROL_SIZE;
+		GetDlgItem(IDC_ShowMathMenu)->ShowWindow(FALSE);
+		GetDlgItem(IDC_HideMathMenu)->ShowWindow(TRUE);
 	}
 	else {
 		m_bShowMathControl = FALSE;
 		m_iShowMathControl = 0;
+		GetDlgItem(IDC_ShowMathMenu)->ShowWindow(TRUE);
+		GetDlgItem(IDC_HideMathMenu)->ShowWindow(FALSE);
 	}
 	ControlView();
 }
@@ -13281,20 +13278,25 @@ void CSerialComDlg::OnBnClickedDisplay3()
 	static BOOL bPreMathViewMode = m_bShowMathControl;
 	static int iPreFilterViewMode = m_iFilterViewMode;
 	if (bBusy) return;
-	bBusy = TRUE;
+	bBusy = TRUE;    
     
-    m_bShowDataControl ^= 0x01;
-	if (m_bShowDataControl) {
+	if (m_bShowDataControl == FALSE) {
+		m_bShowDataControl = TRUE;
+		GetDlgItem(IDC_HIDE_SIDEMENU)->SetWindowTextA("<<");
         m_bShowMathControl = bPreMathViewMode;
 		m_iFilterViewMode = iPreFilterViewMode;        
 		GetDlgItem(IDC_FilterMessage)->ShowWindow(m_bShowFilterLogControl);
 		GetDlgItem(IDC_LogList)->ShowWindow(TRUE);
 		m_ctrlLogList.SetRedraw(TRUE);
 		GetDlgItem(IDC_DataSetting)->ShowWindow(TRUE);
-		GetDlgItem(IDC_Model)->ShowWindow(FALSE);
+		GetDlgItem(IDC_Model)->ShowWindow(FALSE);		
+		GetDlgItem(IDC_ShowMathMenu)->ShowWindow(m_bShowMathControl==FALSE);
+		GetDlgItem(IDC_HideMathMenu)->ShowWindow(m_bShowMathControl);
 		m_iDrawGraphRangeX[0] = m_iPreDrawGraphRangeX;
 	}
 	else {
+		m_bShowDataControl = FALSE;
+		GetDlgItem(IDC_HIDE_SIDEMENU)->SetWindowTextA(">>");
 		bPreMathViewMode = m_bShowMathControl;
 		iPreFilterViewMode = m_iFilterViewMode;
         m_bShowMathControl = FALSE;
@@ -13304,23 +13306,26 @@ void CSerialComDlg::OnBnClickedDisplay3()
 		m_ctrlLogList.SetRedraw(FALSE);
 		GetDlgItem(IDC_DataSetting)->ShowWindow(FALSE);
 		GetDlgItem(IDC_Model)->ShowWindow(FALSE);
-		m_iDrawGraphRangeX[0] = 80;        
+		GetDlgItem(IDC_ShowMathMenu)->ShowWindow(FALSE);
+		GetDlgItem(IDC_HideMathMenu)->ShowWindow(FALSE);
+		m_iDrawGraphRangeX[0] = 80;
 	}
-	GetDlgItem(IDC_ProhibitLogUpdate)->ShowWindow(m_bShowDataControl);
 	GetDlgItem(IDC_Display2)->ShowWindow(m_bShowDataControl);
 	OnSize(0, m_iWndSizeX, m_iWndSizeY);
 	ControlView();
-	bBusy = FALSE;
+
 	BOOL bActive = TRUE;
 	if (IsDlgButtonChecked(IDC_Display3)) {
 		bActive = FALSE;
 	}
-	
 	GetDlgItem(IDC_Display0)->EnableWindow(bActive);
 	GetDlgItem(IDC_Display1)->EnableWindow(bActive);
 	GetDlgItem(IDC_Display2)->EnableWindow(bActive);
-    GetDlgItem(IDC_Display4)->EnableWindow(bActive);
+	GetDlgItem(IDC_Display4)->EnableWindow(bActive);
 	m_bReqGraphUpdate = TRUE;
+
+	Wait(10);
+	bBusy = FALSE;
 }
 
 void CSerialComDlg::OnBnClickedDisplay4() {
@@ -15128,20 +15133,6 @@ BOOL CSerialComDlg::OnHelpInfo(HELPINFO* pHelpInfo)
 	return TRUE; // 부모 클래스의 OnHelpInfo를 호출하지 않고 TRUE를 반환하여 처리를 완료합니다.
 }
      
-void CSerialComDlg::CheckLogUpdate(bool bForced) {
-	static DWORD preTick = GetTickCount();
-	if (bForced == false && (m_bProhibtLogUpdate || m_bShowDataControl == false)) {
-		if (GetTickCount() - preTick < (DWORD)m_iLOG_Update_Period_input_mode) { return; }
-	}
-
-	if (bForced || (m_bReqLogSizeUpdate && GetTickCount() - preTick > (DWORD)m_iLOG_Update_Period)) {
-		m_bReqLogSizeUpdate = FALSE;
-		preTick = GetTickCount();
-		m_ctrlLogList.SetItemCountEx(static_cast<int>(m_arrLogData.size()), LVSICF_NOINVALIDATEALL);
-		ScrollToLastItem();
-	}
-}
-
 
 void CSerialComDlg::OnBnClickedUseloadctrl()
 {
@@ -15225,8 +15216,16 @@ void CSerialComDlg::OnBnClickedAutoconnect()
 		if (nFail > 0) { 
 			CString str2;
 			str2.Format("Fail to Port Open (%d): ", nFail);
-			AfxMessageBox(str2 + str); 
+			AfxMessageBox(str2 + str); 			
 		}
+
+		if (iConnectMode[0] == -1) {
+			m_iProgramMode = DATA_ACQUISITION_MODE;
+		}
+		else {
+			m_iProgramMode = DATA_ANALYZE_MODE;
+		}
+		OnBnClickedDefaultbutton();
 	}
 }
 
@@ -15242,8 +15241,9 @@ bool CSerialComDlg::ReqConnetCheck(int iMode, int iPort) {
 
 bool CSerialComDlg::CheckTorquePort(int i, int iTimeout) {
     m_cSerialPort3.SetCurSel(i);
-    OnPortOpen3();
+	Req_PortOpen(3);
     Wait(10);
+
     
     if (m_ComuPort3.m_bConnected == TRUE) {
         m_bGetTorqueData = false;
@@ -15261,7 +15261,7 @@ bool CSerialComDlg::CheckTorquePort(int i, int iTimeout) {
             Sleep(1);
             ellapsed = GetTickCount()- startTick;
         }
-        if (m_bGetTorqueData == false) { OnPortClose3(); }
+        if (m_bGetTorqueData == false) { Req_PortClose(3); }
         return m_bGetTorqueData;
     }   
     return false;
@@ -15270,8 +15270,8 @@ bool CSerialComDlg::CheckTorquePort(int i, int iTimeout) {
 
 bool CSerialComDlg::CheckLoadPort(int i, int iTimeout) {
 	m_bLoadControlSetting = true;
-	m_cSerialPort3.SetCurSel(i);
-	OnPortOpen2();
+	m_cSerialPort2.SetCurSel(i);
+	Req_PortOpen(2);
 	Wait(10);	
 
 	if (m_ComuPort2.m_bConnected == TRUE) {
@@ -15300,7 +15300,7 @@ bool CSerialComDlg::CheckLoadPort(int i, int iTimeout) {
 				}
 			}
 		}
-		if (m_bGetLoadData == false) { OnPortClose2(); }
+		if (m_bGetLoadData == false) { Req_PortClose(2); }
 		m_bLoadControlSetting = false;
 		return m_bGetLoadData;
 	}
@@ -15310,6 +15310,9 @@ bool CSerialComDlg::CheckLoadPort(int i, int iTimeout) {
 
 bool CSerialComDlg::CheckMcuPort(int i, int iTimeout) {
 	// Need to be implementation
+
+	// Req_PortClose(1)
+	// Req_PortOpen(1)
 	return false;
 }
 
@@ -16075,8 +16078,91 @@ void CSerialComDlg::OnBnClickedDecGain4()
 	SetDlgItemText(IDC_PS_Rate2, str2);
 }
 
+void CSerialComDlg::CheckLogUpdate(bool bForced) {
+	static DWORD preTick = GetTickCount();
+	if (bForced || (m_bReqLogSizeUpdate && GetTickCount() - preTick > (DWORD)m_iLOG_Update_Period)) {
+		m_bReqLogSizeUpdate = FALSE;
+		preTick = GetTickCount();
 
-void CSerialComDlg::OnBnClickedProhibitlogupdate()
+		CWnd* pOldFocus = GetFocus();  // 현재 포커스 저장
+
+		m_ctrlLogList.SetItemCountEx(static_cast<int>(m_arrLogData.size()), LVSICF_NOINVALIDATEALL);
+		ScrollToLastItem();
+
+		// 포커스 복원
+		if (pOldFocus && ::IsWindow(pOldFocus->GetSafeHwnd()))
+		{
+			pOldFocus->SetFocus();
+		}
+	}
+}
+
+void CSerialComDlg::OnBnClickedHideSidemenu()
 {
-	m_bProhibtLogUpdate = IsDlgButtonChecked(IDC_ProhibitLogUpdate);
+	OnBnClickedDisplay3();
+}
+
+
+void CSerialComDlg::OnBnClickedShowmathmenu()
+{
+	CheckDlgButton(IDC_Display2, IsDlgButtonChecked(IDC_Display2) == FALSE);
+	OnBnClickedDisplay2();
+}
+
+
+void CSerialComDlg::OnBnClickedHidemathmenu()
+{
+	CheckDlgButton(IDC_Display2, IsDlgButtonChecked(IDC_Display2) == FALSE);
+	OnBnClickedDisplay2();
+}
+
+void  CSerialComDlg::Req_PortOpen(int nPort) {
+	CCommThread *pComPort;
+	CString* pPortName;
+	int * piSerialPort;
+	CComboBox * pcSerialPort;
+	CString * pstrSerial;
+	int iBaudRate;
+
+	switch (nPort) {
+	case 1: pComPort = &m_ComuPort;  pPortName = &strPort1name; piSerialPort = &m_iSerialPort;  pcSerialPort = &m_cSerialPort;  pstrSerial = &m_strSerial; iBaudRate = m_iBaudRate;  break;
+	case 2: pComPort = &m_ComuPort2;  pPortName = &strPort2name; piSerialPort = &m_iSerialPort2;  pcSerialPort = &m_cSerialPort2; pstrSerial = &m_strSerial2; iBaudRate = m_iBaudRate2; break;
+	case 3: pComPort = &m_ComuPort3;  pPortName = &strPort3name; piSerialPort = &m_iSerialPort3;  pcSerialPort = &m_cSerialPort3; pstrSerial = &m_strSerial3; iBaudRate = m_iBaudRate3; break;
+	default: AfxMessageBox("Port Close mode Error"); return;
+	}
+	Req_PortClose(nPort);
+
+	if (m_ComuPort.m_bConnected == TRUE) {
+		OnPortClose1();
+		Wait(0);
+		Wait(0);
+		Wait(0);
+	}
+
+	*piSerialPort = pcSerialPort->GetCurSel();
+	pcSerialPort->GetLBText(*piSerialPort, *pstrSerial);
+	pstrSerial->Format("%s", (LPCTSTR)RemoveSerialInfo(*pstrSerial));		
+	
+	if (pComPort->OpenPort(byNameComPort(*pstrSerial), byIndexBaud(iBaudRate), 8, 0, 0) == TRUE) {
+		pPortName->Format("%s", pComPort->m_sPortName);		
+	}
+}
+
+
+void  CSerialComDlg::Req_PortClose(int nPort) {
+	CCommThread *pComPort;
+	CString* pPortName;
+
+	switch (nPort) {
+	case 1: pComPort = &m_ComuPort;  pPortName = &strPort1name; break;
+	case 2: pComPort = &m_ComuPort2;  pPortName = &strPort2name; break;
+	case 3: pComPort = &m_ComuPort3;  pPortName = &strPort3name; break;
+	default: AfxMessageBox("Port Close mode Error"); return; 
+	}
+	
+	if (pComPort->m_bConnected == TRUE) {
+		pComPort->ClosePort();
+		pPortName->Empty();;
+		Wait(10);
+	}
 }

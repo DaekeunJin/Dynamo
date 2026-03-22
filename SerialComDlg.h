@@ -82,6 +82,8 @@ private:
 
 public:
 	afx_msg void Wait(DWORD dwMillisecond);
+	void Req_PortOpen(int nPort);
+	void Req_PortClose(int nPort);
 	afx_msg void OnPortOpen1();
 	afx_msg void OnPortClose1();
 	afx_msg void OnSelchangeSerialPort();
@@ -805,7 +807,6 @@ public:
     BOOL m_bReqLogSizeUpdate{ FALSE };
     void CheckLogUpdate(bool bForced = false);
     int m_iLOG_Update_Period{ 500 };
-	int m_iLOG_Update_Period_input_mode{ 60000 };
 	afx_msg void OnBnClickedDisplay4();
 	afx_msg void OnPortOpen3();
 	afx_msg void OnPortClose3();
@@ -896,8 +897,9 @@ public:
 	afx_msg void OnBnClickedIncGain4();
 	afx_msg void OnBnClickedDecGain6();
 	afx_msg void OnBnClickedDecGain4();
-	afx_msg void OnBnClickedProhibitlogupdate();
-	bool m_bProhibtLogUpdate{ true };
+	afx_msg void OnBnClickedHideSidemenu();
+	afx_msg void OnBnClickedShowmathmenu();
+	afx_msg void OnBnClickedHidemathmenu();
 };
 
 

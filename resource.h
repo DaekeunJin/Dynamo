@@ -239,6 +239,8 @@
 #define IDC_MathProbeValue_M2           1385
 #define IDC_MathProbeValue_M3           1386
 #define IDC_MathProbeNameValue_M4       1387
+#define IDC_HideMathMenu                1388
+#define IDC_ShowMathMenu                1389
 #define IDC_MathProbeNameValue_M5       1396
 #define IDC_MathProbeNameValue_M6       1407
 #define IDC_MathProbeNameValue_M7       1416
@@ -1140,7 +1142,6 @@
 #define IDC_ChangeSize                  2108
 #define IDC_LogUpdateCount              2109
 #define IDC_Dummy                       2110
-#define IDC_LogUpdateCount2             2110
 #define IDC_UseLoadCtrl                 2111
 #define IDC_LoadCtrl_Torque             2112
 #define IDC_LoadCtrl_TargetTorque       2112
@@ -1192,6 +1193,7 @@
 #define IDC_DEC_Gain5                   2151
 #define IDC_INC_Gain6                   2152
 #define IDC_DEC_Gain6                   2153
+#define IDC_HIDE_SIDEMENU               2154
 
 // Next default values for new objects
 // 
@@ -1199,7 +1201,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        232
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         2134
+#define _APS_NEXT_CONTROL_VALUE         2155
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
