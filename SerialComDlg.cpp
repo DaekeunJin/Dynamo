@@ -1301,7 +1301,7 @@ long CSerialComDlg::OnCommunication2(WPARAM wParam, LPARAM lParam) {
 							str.Format("%5.3f", val);
 							SetDlgItemText(IDC_PS_Current, str);
 						}
-						if (IsDlgButtonChecked(IDC_UseLoadCtrl)) {
+						if (m_bUseLoadControl) {
 							AutoControlVoltage();
 						}
 						m_LoadPacket.req_ack = false;
@@ -1664,8 +1664,6 @@ void CSerialComDlg::PostProcessTorqueData(TORQUE_DATA_T *pData) {
 		str.Format("%f ", pData->fTorque );
 	}
 
-
-
 	str.Format("%s", AddComma(pData->iRpm));
 	SetDlgItemText(IDC_LoadCtrl_Speed, str);
 
@@ -1678,7 +1676,7 @@ void CSerialComDlg::PostProcessTorqueData(TORQUE_DATA_T *pData) {
 
 	// Check Load Control
 	if (m_ComuPort2.m_bConnected && m_LoadPacket.bIsSetting == false) {
-		if (m_LoadPacket.req_ack == false || (m_LoadPacket.req_ack && m_LoadPacket.tick_send - GetTickCount() > 100))  {
+		if (m_LoadPacket.req_ack == false || (GetTickCount()- m_LoadPacket.tick_send > 100))  {
 			while (1) {
 				if (++LoadCommID > PS_GET_CUR_OUT) {
 					LoadCommID = PS_REQ_VOLT_SET;
@@ -1688,7 +1686,8 @@ void CSerialComDlg::PostProcessTorqueData(TORQUE_DATA_T *pData) {
 				else if (LoadCommID == PS_GET_CUR_OUT || LoadCommID == PS_REQ_VOLT_SET) {
 					Send_LoadPacket((POWERSUPLY_CMD_e)LoadCommID);
 					break;
-				}				
+				}	
+				Wait(0);
 			}
 		}
 	}
@@ -15140,13 +15139,10 @@ BOOL CSerialComDlg::OnHelpInfo(HELPINFO* pHelpInfo)
 
 void CSerialComDlg::OnBnClickedUseloadctrl()
 {
-	bool bActive = false;
-	if (IsDlgButtonChecked(IDC_UseLoadCtrl)) {
-		bActive = true;
+	m_bUseLoadControl = IsDlgButtonChecked(IDC_UseLoadCtrl);
+	if (m_bUseLoadControl) {
 		m_bResetIntGain = true;
 	}
-	
-	//GetDlgItem(IDC_LoadCtrl_Torque)->EnableWindow(bActive);
 }
 
 
@@ -15187,7 +15183,7 @@ void CSerialComDlg::OnBnClickedAutoconnect()
                     bAvailable[i] = false;
                     break;
                 }
-				Sleep(10);
+				Wait(10);
             }
         }
     }
@@ -15741,8 +15737,12 @@ void CSerialComDlg::AutoControlVoltage() {
 		double fI_gain = abs(atof(str));
 
 		double delta = tor_target - tor_cur;
-		if (delta > 0 && dir < 0) { dir = 1; fInt = 0; }
-		else if (delta < 0 && dir > 0) { dir = -1; fInt = 0; }
+		if (delta > 0 && dir != 1) { 
+			dir = 1; fInt = 0; 
+		}
+		else if (delta < 0 && dir != -1) { 
+			dir = -1; fInt = 0; 
+		}
 
 		if (m_bResetIntGain) {
 			fInt = 0.f;
@@ -15752,7 +15752,7 @@ void CSerialComDlg::AutoControlVoltage() {
 			fInt += delta;
 		}
 
-		m_iVoltTarget_x100 += (int)((tor_target - tor_cur) * gain + fInt * fI_gain);
+		m_iVoltTarget_x100 += (int)(delta * gain + fInt * fI_gain);
 	}
 	str.Format("%05.2f", 0.01 * m_iVoltTarget_x100 + 0.001);
 	SetDlgItemText(IDC_PS_Volt, str);

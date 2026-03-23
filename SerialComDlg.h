@@ -900,6 +900,7 @@ public:
 	afx_msg void OnBnClickedHideSidemenu();
 	afx_msg void OnBnClickedShowmathmenu();
 	afx_msg void OnBnClickedHidemathmenu();
+	bool m_bUseLoadControl;
 };
 
 
