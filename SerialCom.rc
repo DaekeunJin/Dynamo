@@ -316,7 +316,7 @@ BEGIN
     PUSHBUTTON      "Define",IDC_DefineMathProbe,65,354,37,15
     PUSHBUTTON      "copyData",IDC_RefData,1018,115,43,14,NOT WS_VISIBLE
     CONTROL         "GetAllData",IDC_SaveRcvDataAll,"Button",BS_AUTOCHECKBOX | NOT WS_VISIBLE | WS_TABSTOP,619,171,52,10
-    PUSHBUTTON      "Send CMD",IDC_ReqcontrolDlg,1025,189,67,17,NOT WS_VISIBLE
+    PUSHBUTTON      "Send CMD",IDC_ReqcontrolDlg,881,49,67,17
     LTEXT           "Header",IDC_STATIC,676,117,25,8,NOT WS_VISIBLE
     PUSHBUTTON      "Reload",IDC_Reload,770,167,31,14,NOT WS_VISIBLE
     CONTROL         "ShowAll(max:",IDC_FitToMaxData,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,1036,13,60,16
@@ -1076,6 +1076,7 @@ BEGIN
     CONTROL         "8",IDC_ControPreset7,"Button",BS_AUTORADIOBUTTON,29,160,17,10
     CONTROL         "9",IDC_ControPreset8,"Button",BS_AUTORADIOBUTTON,29,175,17,10
     CONTROL         "10",IDC_ControPreset9,"Button",BS_AUTORADIOBUTTON,29,190,17,10
+    CONTROL         "10",IDC_ControPreset10,"Button",BS_AUTORADIOBUTTON | NOT WS_VISIBLE,6,27,17,10
     EDITTEXT        IDC_ControlMessage0,49,53,500,12,ES_AUTOHSCROLL
     EDITTEXT        IDC_ControlMessage1,49,69,500,12,ES_AUTOHSCROLL
     EDITTEXT        IDC_ControlMessage2,49,84,500,12,ES_AUTOHSCROLL
@@ -1086,7 +1087,7 @@ BEGIN
     EDITTEXT        IDC_ControlMessage7,49,159,500,12,ES_AUTOHSCROLL
     EDITTEXT        IDC_ControlMessage8,49,174,500,12,ES_AUTOHSCROLL
     EDITTEXT        IDC_ControlMessage9,49,189,500,12,ES_AUTOHSCROLL
-    PUSHBUTTON      "Send Data",IDC_SendCommand,133,229,57,31
+    PUSHBUTTON      "Send Data",IDC_SendCommand,200,229,57,31
     LTEXT           "Transmit Data(Hex)",IDC_STATIC,21,280,64,8
     LTEXT           "Parameter ",IDC_STATIC,23,229,36,9
     EDITTEXT        IDC_nVariables,62,227,19,13,ES_CENTER | ES_AUTOHSCROLL
@@ -1153,7 +1154,7 @@ BEGIN
     EDITTEXT        IDC_Parameter17,398,382,44,13,ES_CENTER | ES_AUTOHSCROLL | ES_READONLY | NOT WS_VISIBLE
     EDITTEXT        IDC_Parameter18,446,382,44,13,ES_CENTER | ES_AUTOHSCROLL | ES_READONLY | NOT WS_VISIBLE
     EDITTEXT        IDC_Parameter19,494,382,44,13,ES_CENTER | ES_AUTOHSCROLL | ES_READONLY | NOT WS_VISIBLE
-    DEFPUSHBUTTON   "Button1",IDC_Default,222,227,20,38,NOT WS_VISIBLE
+    DEFPUSHBUTTON   "Button1",IDC_Default,533,269,20,38,NOT WS_VISIBLE
     LTEXT           "Byte Ordering",IDC_STATIC,197,309,45,8
     CONTROL         "Big Endian",IDC_ByteOrder0,"Button",BS_AUTORADIOBUTTON | WS_GROUP,247,306,48,14
     CONTROL         "Little Endian",IDC_ByteOrder1,"Button",BS_AUTORADIOBUTTON,299,306,48,14
@@ -1164,7 +1165,7 @@ BEGIN
     LTEXT           "Hex     ¡ê     val(float) ",IDC_STATIC,476,218,74,8
     COMBOBOX        IDC_DataType,109,307,44,73,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
     CTEXT           "Hex",IDC_DataLabel2,21,384,39,8
-    GROUPBOX        "< Preset >",IDC_STATIC,22,39,532,168
+    GROUPBOX        "< Preset >",IDC_STATIC_Full,22,39,532,168
     LTEXT           "Send character",IDC_STATIC,26,16,53,8
     PUSHBUTTON      "0",IDC_RemoteCommand0,86,14,10,14
     PUSHBUTTON      "1",IDC_RemoteCommand1,98,14,10,14
@@ -1190,6 +1191,11 @@ BEGIN
     DEFPUSHBUTTON   "Acquisition Mode",IDC_DefaultButton2,348,13,70,13
     PUSHBUTTON      "Reset Data",IDC_ResetData,423,13,51,13
     PUSHBUTTON      "Minl size",IDC_ChangeSize,494,13,51,13
+    EDITTEXT        IDC_ControlMessage10,30,37,468,12,ES_AUTOHSCROLL | NOT WS_VISIBLE
+    PUSHBUTTON      "Send",IDC_SendCommand2,502,35,43,14,NOT WS_VISIBLE
+    CONTROL         "Motor Port",IDC_SendPort1,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,144,223,49,10
+    CONTROL         "Braker Port",IDC_SendPort2,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,144,240,51,10
+    CONTROL         "Torque Port",IDC_SendPort3,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,144,257,48,10
 END
 
 IDD_Game DIALOGEX 0, 0, 593, 527
@@ -4267,6 +4273,8 @@ BEGIN
 0x2020, 0x6e69, 0x3874, "\000" 
     IDC_ParamType0, 0x403, 8, 0
 0x2020, 0x6c66, 0x616f, 0x0074, 
+    IDC_ParamType0, 0x403, 9, 0
+0x2020, 0x7473, 0x6972, 0x676e, "\000" 
     IDC_ParamType1, 0x403, 8, 0
 0x7520, 0x6e69, 0x3374, 0x0032, 
     IDC_ParamType1, 0x403, 8, 0
@@ -4281,6 +4289,8 @@ BEGIN
 0x2020, 0x6e69, 0x3874, "\000" 
     IDC_ParamType1, 0x403, 8, 0
 0x2020, 0x6c66, 0x616f, 0x0074, 
+    IDC_ParamType1, 0x403, 9, 0
+0x2020, 0x7473, 0x6972, 0x676e, "\000" 
     IDC_ParamType2, 0x403, 8, 0
 0x7520, 0x6e69, 0x3374, 0x0032, 
     IDC_ParamType2, 0x403, 8, 0
@@ -4295,6 +4305,8 @@ BEGIN
 0x2020, 0x6e69, 0x3874, "\000" 
     IDC_ParamType2, 0x403, 8, 0
 0x2020, 0x6c66, 0x616f, 0x0074, 
+    IDC_ParamType2, 0x403, 9, 0
+0x2020, 0x7473, 0x6972, 0x676e, "\000" 
     IDC_ParamType3, 0x403, 8, 0
 0x7520, 0x6e69, 0x3374, 0x0032, 
     IDC_ParamType3, 0x403, 8, 0
@@ -4309,6 +4321,8 @@ BEGIN
 0x2020, 0x6e69, 0x3874, "\000" 
     IDC_ParamType3, 0x403, 8, 0
 0x2020, 0x6c66, 0x616f, 0x0074, 
+    IDC_ParamType3, 0x403, 9, 0
+0x2020, 0x7473, 0x6972, 0x676e, "\000" 
     IDC_ParamType4, 0x403, 8, 0
 0x7520, 0x6e69, 0x3374, 0x0032, 
     IDC_ParamType4, 0x403, 8, 0
@@ -4323,6 +4337,8 @@ BEGIN
 0x2020, 0x6e69, 0x3874, "\000" 
     IDC_ParamType4, 0x403, 8, 0
 0x2020, 0x6c66, 0x616f, 0x0074, 
+    IDC_ParamType4, 0x403, 9, 0
+0x2020, 0x7473, 0x6972, 0x676e, "\000" 
     IDC_ParamType5, 0x403, 8, 0
 0x7520, 0x6e69, 0x3374, 0x0032, 
     IDC_ParamType5, 0x403, 8, 0
@@ -4337,6 +4353,8 @@ BEGIN
 0x2020, 0x6e69, 0x3874, "\000" 
     IDC_ParamType5, 0x403, 8, 0
 0x2020, 0x6c66, 0x616f, 0x0074, 
+    IDC_ParamType5, 0x403, 9, 0
+0x2020, 0x7473, 0x6972, 0x676e, "\000" 
     IDC_ParamType6, 0x403, 8, 0
 0x7520, 0x6e69, 0x3374, 0x0032, 
     IDC_ParamType6, 0x403, 8, 0
@@ -4351,6 +4369,8 @@ BEGIN
 0x2020, 0x6e69, 0x3874, "\000" 
     IDC_ParamType6, 0x403, 8, 0
 0x2020, 0x6c66, 0x616f, 0x0074, 
+    IDC_ParamType6, 0x403, 9, 0
+0x2020, 0x7473, 0x6972, 0x676e, "\000" 
     IDC_ParamType7, 0x403, 8, 0
 0x7520, 0x6e69, 0x3374, 0x0032, 
     IDC_ParamType7, 0x403, 8, 0
@@ -4365,6 +4385,8 @@ BEGIN
 0x2020, 0x6e69, 0x3874, "\000" 
     IDC_ParamType7, 0x403, 8, 0
 0x2020, 0x6c66, 0x616f, 0x0074, 
+    IDC_ParamType7, 0x403, 9, 0
+0x2020, 0x7473, 0x6972, 0x676e, "\000" 
     IDC_ParamType8, 0x403, 8, 0
 0x7520, 0x6e69, 0x3374, 0x0032, 
     IDC_ParamType8, 0x403, 8, 0
@@ -4379,6 +4401,8 @@ BEGIN
 0x2020, 0x6e69, 0x3874, "\000" 
     IDC_ParamType8, 0x403, 8, 0
 0x2020, 0x6c66, 0x616f, 0x0074, 
+    IDC_ParamType8, 0x403, 9, 0
+0x2020, 0x7473, 0x6972, 0x676e, "\000" 
     IDC_ParamType9, 0x403, 8, 0
 0x7520, 0x6e69, 0x3374, 0x0032, 
     IDC_ParamType9, 0x403, 8, 0
@@ -4393,6 +4417,8 @@ BEGIN
 0x2020, 0x6e69, 0x3874, "\000" 
     IDC_ParamType9, 0x403, 8, 0
 0x2020, 0x6c66, 0x616f, 0x0074, 
+    IDC_ParamType9, 0x403, 9, 0
+0x2020, 0x7473, 0x6972, 0x676e, "\000" 
     IDC_DataType, 0x403, 8, 0
 0x7520, 0x6e69, 0x3374, 0x0032, 
     IDC_DataType, 0x403, 8, 0
@@ -4407,6 +4433,8 @@ BEGIN
 0x2020, 0x6e69, 0x3874, "\000" 
     IDC_DataType, 0x403, 8, 0
 0x2020, 0x6c66, 0x616f, 0x0074, 
+    IDC_DataType, 0x403, 9, 0
+0x2020, 0x7473, 0x6972, 0x676e, "\000" 
     0
 END
 

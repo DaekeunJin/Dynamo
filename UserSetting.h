@@ -95,7 +95,7 @@
 #define SOCKET_PORT						25031
 
 #define N_MAX_Control	                10
-#define N_MAX_Preset	                10
+#define N_MAX_Preset	                11
 #define MAX_COM_PORT_SIZE	            100
 
 #define MIN_DISPLAY_SIZE	            4

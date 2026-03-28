@@ -800,7 +800,9 @@
 #define IDC_ParameterLabel11            1839
 #define IDC_Parameter11                 1839
 #define IDC_DataType0                   1840
+#define IDC_ControPreset10              1840
 #define IDC_DataType1                   1841
+#define IDC_ControlMessage10            1841
 #define IDC_UseHeader                   1842
 #define IDC_Convert_char                1843
 #define IDC_Convert_Ascii               1844
@@ -828,6 +830,7 @@
 #define IDC_ParameterLabel19            1854
 #define IDC_Record                      1854
 #define IDC_UseIntegerData              1854
+#define IDC_SendCommand2                1854
 #define IDC_SourceType0                 1855
 #define IDC_FixDataType                 1855
 #define IDC_DeleteRecord                1856
@@ -970,13 +973,16 @@
 #define IDC_PressButton0                1967
 #define IDC_NoHeader                    1967
 #define IDC_UseProtection_OverVoltge    1967
+#define IDC_SendPort1                   1967
 #define IDC_replaybutton0               1968
 #define IDC_PressButton1                1968
 #define IDC_UseProtection_OverCurrent   1968
+#define IDC_SendPort2                   1968
 #define IDC_replaybutton1               1969
 #define IDC_XinputTest                  1969
 #define IDC_PressButton2                1969
 #define IDC_UseBeep                     1969
+#define IDC_SendPort3                   1969
 #define IDC_replaybutton2               1970
 #define IDC_STATIC10                    1970
 #define IDC_PressButton3                1970
@@ -1194,6 +1200,7 @@
 #define IDC_INC_Gain6                   2152
 #define IDC_DEC_Gain6                   2153
 #define IDC_HIDE_SIDEMENU               2154
+#define IDC_STATIC_Full                 2155
 
 // Next default values for new objects
 // 
@@ -1201,7 +1208,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        232
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         2155
+#define _APS_NEXT_CONTROL_VALUE         2156
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

@@ -884,16 +884,12 @@ int CSerialComDlg::String2Num(const CString& str)
 }
 
 void CSerialComDlg::OnPortOpen1() {
-	OnPortClose1();
-
 	UpdateData(TRUE);
 	CString PortName;
 
 	if (m_ComuPort.m_bConnected == TRUE) {
 		OnPortClose1();
-		Wait(0);
-        Wait(0);
-        Wait(0);
+		Wait(100);
 	}
 
 	m_iSerialPort = m_cSerialPort.GetCurSel();
@@ -918,16 +914,12 @@ void CSerialComDlg::OnPortOpen1() {
 
 
 void CSerialComDlg::OnPortOpen2(){
-	OnPortClose2();
-
 	UpdateData(TRUE);
 	CString PortName2;
 
 	if (m_ComuPort2.m_bConnected == TRUE) {
 		OnPortClose2();
-        Wait(0);
-        Wait(0);
-        Wait(0);
+        Wait(100);
 	}
 
 	m_iSerialPort2 = m_cSerialPort2.GetCurSel();
@@ -952,16 +944,12 @@ void CSerialComDlg::OnPortOpen2(){
 
 
 void CSerialComDlg::OnPortOpen3() {
-	OnPortClose3();
-
 	UpdateData(TRUE);
 	CString PortName3;
 
 	if (m_ComuPort3.m_bConnected == TRUE) {
 		OnPortClose3();
-		Wait(0);
-		Wait(0);
-		Wait(0);
+		Wait(100);
 	}
 
 	m_iSerialPort3 = m_cSerialPort3.GetCurSel();
@@ -15688,6 +15676,7 @@ void CSerialComDlg::OnBnClickedVoltdn5()
 
 void CSerialComDlg::OnBnClickedReqnoload()
 {
+	OnBnClickedVoltdn5();
 	Init_PS_Setting();
 }
 
@@ -15712,7 +15701,12 @@ void CSerialComDlg::Init_PS_Setting() {
 	Wait(30);
 
 	Send_LoadPacket(PS_REQ_ONOFF, 1.f);
-	Wait(30);	
+	Wait(30);
+
+	// Control off
+	CheckDlgButton(IDC_UseLoadCtrl, FALSE);
+	OnBnClickedUseloadctrl();
+	OnBnClickedVoltdn5();
 
 	m_bLoadControlSetting = false;
 }
