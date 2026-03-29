@@ -15140,8 +15140,7 @@ void CSerialComDlg::OnBnClickedAutoconnect()
     OnPortClose1();
     OnPortClose2();
     OnPortClose3();
-
-	Wait(50);
+	Wait(100);
 
     OnSetfocusSerialPort();
     OnSetfocusSerialPort2();
@@ -15185,7 +15184,7 @@ void CSerialComDlg::OnBnClickedAutoconnect()
 
 		CString str = "";
 		int nFail = 0;
-		if (iConnectMode[0] == -1) {
+		if (iConnectMode[2] == -1) {
 			str += " MCU";			
 			nFail++;
 		}
@@ -15195,7 +15194,7 @@ void CSerialComDlg::OnBnClickedAutoconnect()
 			nFail++;
 		}
 
-		if (iConnectMode[2] == -1) {
+		if (iConnectMode[0] == -1) {
 			if (nFail > 0) { str += ","; }
 			str += " Torquemeter";
 			nFail++;
@@ -15219,10 +15218,11 @@ void CSerialComDlg::OnBnClickedAutoconnect()
 
 
 bool CSerialComDlg::ReqConnetCheck(int iMode, int iPort) {
-    switch (iMode) {    
+    switch (iMode) {    	
+	case 0: return CheckTorquePort(iPort);
 	case 1: return CheckLoadPort(iPort);
 	case 2: return CheckMcuPort(iPort);
-    case 0: return CheckTorquePort(iPort);
+    
     }
     return false;
 }
